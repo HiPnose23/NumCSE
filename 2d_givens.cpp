@@ -7,16 +7,17 @@ void givens2d(Eigen::MatrixXd &A, int k){
   double sigma;
   double rho;
     
-
+  // Case where we are at the last block, so only a 2 x 2 block can be modified
   if(k == A.rows()-2){
-    Eigen::MatrixXd B = A.block(k,k,2,2);
-    gamma = B(0,0)/(std::sqrt(B(0,0)*B(0,0)+B(1,0)*B(1,0)));
+    Eigen::MatrixXd B = A.block(k,k,2,2); // Block to be modified
+    gamma = B(0,0)/(std::sqrt(B(0,0)*B(0,0)+B(1,0)*B(1,0))); // Compute 2d Givens matrix and apply to block
     sigma = B(1,0)/(std::sqrt(B(0,0)*B(0,0)+B(1,0)*B(1,0)));
     G << gamma, sigma, -sigma, gamma;
     std::cout << "Matrix G: " << std::endl;
     std::cout << G << std::endl << std::endl;
     A.block(k,k,2,2) = G*B;
   }
+  // Standard case
   else {
     Eigen::MatrixXd B = A.block(k,k,2,3);
     gamma = B(0,0)/(std::sqrt(B(0,0)*B(0,0)+B(1,0)*B(1,0)));
@@ -29,6 +30,8 @@ void givens2d(Eigen::MatrixXd &A, int k){
 }
 
 int main(){
+
+  // Initialise a trigiagonal matrix of size n x n
   int n = 10;
   Eigen::VectorXd d = Eigen::VectorXd::LinSpaced(n,1,n);
   Eigen::VectorXd l = Eigen::VectorXd::LinSpaced(n-1,n+1,n+9);
